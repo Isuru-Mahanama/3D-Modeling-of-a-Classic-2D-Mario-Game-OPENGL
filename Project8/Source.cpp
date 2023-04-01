@@ -17,13 +17,27 @@ const GLfloat ashBlue[4] = { 0.392, 0.584, 0.929, 1.0 };
 const GLfloat steedBlue[4] = { 0.275, 0.510, 0.706, 1.0 };
 const GLfloat powderBlue[4] = { 0.690, 0.878, 0.902, 1.0 };
 const GLfloat dark_green[4] = { 0.000, 0.392, 0.000,1 };
+const GLfloat treeGreen[] = { 0,0.6,0 };
 const GLfloat spring_green[4] = { 0.196, 0.804, 0.196 ,1.0 };
 const GLfloat khaki[4] = { 0.941, 0.902, 0.549 ,1.0 };
 const GLfloat teal[4] = { 0.000, 0.502, 0.502 ,1.0};
 const GLfloat pale[4] = { 0.686, 0.933, 0.933 ,1.0 };
+const GLfloat lightSource[4] = { 1,0.8,1.0,1 };
+const GLfloat white2[4] = { 1.0,1.0,1.0,1.0 };
+const GLfloat orange_yellow[4] = { 1.000,0.3, 0.000 };
+
+
+GLfloat turn = 0;
 
 GLfloat xRotated = 0;
-GLfloat radius = 0.5;
+GLfloat travel = 0;
+GLfloat traveldown = 0;
+GLfloat travelfront = 0;
+GLfloat travelup = 0;
+GLfloat travelleft = 0;
+
+GLfloat travelside = 0;
+
 GLfloat xtranslate = 0;
 GLfloat ytranslate =0;
 GLfloat ytranslateR = 0;
@@ -190,6 +204,14 @@ void drawRightEye() {
     glPopMatrix();
 }
 
+void drawCoins() {
+
+    glPushMatrix();
+    glRotatef(xRotated, 0, 1, 0);
+    glScalef(0.2, 1, 1);
+    glutSolidSphere(1,100,100);
+    glPopMatrix();
+}
 
 void marioFace() {
 
@@ -544,6 +566,7 @@ void drawBrownEnimy() {
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, brown);
     glTranslatef(0, 0.7, 0);
+    glColor3f(0.502, 0.000, 0.000);
     glutSolidSphere(0.6, 40, 40);
     glPopMatrix();
 
@@ -559,46 +582,54 @@ void drawBrownEnimy() {
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, lightbrown);
+    glColor3f(0.824, 0.706, 0.549);
     glTranslatef(0, -1, -1);
     drawhorizontalcylinder(-90, 0, 0.4, 0.4, 1);
     glPopMatrix();
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, brown);
+    glColor3f(0.502, 0.000, 0.000);
     glTranslatef(-0.35, -1.1, 0.5);
     glutSolidSphere(0.4, 40, 40);
     glPopMatrix();
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, brown);
+    glColor3f(0.502, 0.000, 0.000);
     glTranslatef(0.35, -1.1, 0.5);
     glutSolidSphere(0.4, 40, 40);
     glPopMatrix();
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1, 1, 1);
     glTranslatef(0.35, -1.1, 0.5);
     glutSolidSphere(0.4, 40, 40);
     glPopMatrix();
 
     glPushMatrix();
     glTranslatef(-0.28, .7, 0.3);
+    glColor3f(1, 1, 1);
     glutSolidSphere(0.4, 40, 40);
     glPopMatrix();
 
     glPushMatrix();
     glTranslatef(0.28, .7, 0.3);
+    glColor3f(1, 1, 1);
     glutSolidSphere(0.4, 40, 40);
     glPopMatrix();
 
     glPushMatrix();
     glTranslatef(-0.3, 1.0, 0.6);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, black);
+    glColor3f(0, 0, 0);
     glutSolidSphere(0.1, 40, 40);
     glPopMatrix();
 
     glPushMatrix();
     glTranslatef(0.3, 1.0, 0.6);
+    glColor3f(0, 0, 0);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, black);
     glutSolidSphere(0.1, 40, 40);
     glPopMatrix();
@@ -607,18 +638,21 @@ void drawBrownEnimy() {
     glTranslatef(0.3, 0.35, 0.8);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
     glRotatef(-90, 1, 0, 0);
+    glColor3f(1, 1, 1);
     glutSolidCone(0.2, 0.3, 40, 40);
     glPopMatrix();
 
     glPushMatrix();
     glTranslatef(-0.3, 0.35, 0.8);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1, 1, 1);
     glRotatef(-90, 1, 0, 0);
     glutSolidCone(0.2, 0.3, 40, 40);
     glPopMatrix();
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, black);
+    glColor3f(0, 0, 0);
     glRotatef(-90, 1, 0, 0);
     glTranslatef(0, -0.2, 0.4);
     drawCircle(1);
@@ -723,70 +757,80 @@ void drawGrid() {
 
 void drawRedEnemy() {
 
-    glPushMatrix();
+   
     glRotatef(-10, 1, 0, 0);
     glPushMatrix();
     glTranslatef(0, 1.1, -1);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1, 1, 1);
     drawhorizontalcylinder(0, 0, 1., 1, 2);
     glPopMatrix();
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, red);
+    glColor3f(1, 0, 0);
     glutSolidSphere(1.2, 40, 40);
-    glPopMatrix();
     glPopMatrix();
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, yellow);
+    glColor3f(1, 1, 0);
     glTranslatef(0, 1, 1);
     drawhorizontalcylinder(0, 0, 0.5, 0.5, 0.6);
     glPopMatrix();
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, yellow);
+    glColor3f(1, 1, 0);
     glTranslatef(0, 0, 1);
     glutSolidSphere(0.5, 40, 40);
     glPopMatrix();
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, yellow);
+    glColor3f(1, 1, 0);
     glTranslatef(0, 0, 1.4);
     glutSolidSphere(0.5, 40, 40);
     glPopMatrix();
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, yellow);
+    glColor3f(1, 1, 0);
     glTranslatef(0, -0.3, 1.6);
     glutSolidSphere(0.5, 40, 40);
     glPopMatrix();
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1, 1, 1);
     glTranslatef(0.15, 0.2, 1.65);
     glutSolidSphere(0.2, 40, 40);
     glPopMatrix();
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1, 1, 1);
     glTranslatef(-0.15, 0.2, 1.65);
     glutSolidSphere(0.2, 40, 40);
     glPopMatrix();
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, black);
+    glColor3f(0, 0, 0);
     glTranslatef(-0.15, 0.29, 1.75);
     glutSolidSphere(0.1, 40, 40);
     glPopMatrix();
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, black);
+    glColor3f(0, 0, 0);
     glTranslatef(0.15, 0.29, 1.75);
     glutSolidSphere(0.1, 40, 40);
     glPopMatrix();
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1, 1, 1);
     glTranslatef(0, 1.2, 0);
     glRotatef(-90, 1, 0, 0);
     glutSolidCone(0.3, 0.5, 40, 40);
@@ -794,6 +838,7 @@ void drawRedEnemy() {
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1, 1, 1);
     glTranslatef(-0.7, 0.9, 0);
     glRotatef(-90, 1, 0, 0);
     glRotatef(-30, 0, 1, 0);
@@ -802,6 +847,7 @@ void drawRedEnemy() {
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1, 1, 1);
     glTranslatef(0.7, 0.9, 0);
     glRotatef(-90, 1, 0, 0);
     glRotatef(30, 0, 1, 0);
@@ -810,6 +856,7 @@ void drawRedEnemy() {
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1, 1, 1);
     glTranslatef(1.2, 0.2, 0);
     glRotatef(-90, 1, 0, 0);
     glRotatef(75, 0, 1, 0);
@@ -819,6 +866,7 @@ void drawRedEnemy() {
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1, 1, 1);
     glTranslatef(-1.2, 0.2, 0);
     glRotatef(-90, 1, 0, 0);
     glRotatef(-75, 0, 1, 0);
@@ -828,6 +876,7 @@ void drawRedEnemy() {
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1, 1, 1);
     glTranslatef(0, 1., 0.7);
     glRotatef(-90, 1, 0, 0);
     glRotatef(30, 1, 0, 0);
@@ -837,6 +886,7 @@ void drawRedEnemy() {
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1, 1, 1);
     glTranslatef(-0.7, 0.7, 0.7);
     glRotatef(-90, 1, 0, 0);
     glRotatef(20, 1, 0, 0);
@@ -846,6 +896,7 @@ void drawRedEnemy() {
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1, 1, 1);
     glTranslatef(0.7, 0.7, 0.7);
     glRotatef(-90, 1, 0, 0);
     glRotatef(20, 1, 0, 0);
@@ -856,6 +907,7 @@ void drawRedEnemy() {
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1, 1, 1);
     glTranslatef(0, 0.95, -0.7);
     glRotatef(-90, 1, 0, 0);
     glRotatef(-30, 1, 0, 0);
@@ -865,6 +917,7 @@ void drawRedEnemy() {
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1, 1, 1);
     glTranslatef(-0.7, 0.7, -0.7);
     glRotatef(-90, 1, 0, 0);
     glRotatef(-20, 1, 0, 0);
@@ -874,6 +927,7 @@ void drawRedEnemy() {
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1, 1, 1);
     glTranslatef(0.7, 0.7, -0.7);
     glRotatef(-90, 1, 0, 0);
     glRotatef(-20, 1, 0, 0);
@@ -883,6 +937,7 @@ void drawRedEnemy() {
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, yellow);
+    glColor3f(1, 1, 0);
     glTranslatef(0.4, -1, 0.7);
     glutSolidSphere(0.4, 40, 40);
     glPopMatrix();
@@ -890,6 +945,7 @@ void drawRedEnemy() {
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, yellow);
+    glColor3f(1, 1, 0);
     glTranslatef(-0.4, -1, 0.7);
     glutSolidSphere(0.4, 40, 40);
     glPopMatrix();
@@ -897,6 +953,7 @@ void drawRedEnemy() {
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, yellow);
+    glColor3f(1, 1, 0);
     glTranslatef(-0.4, -1, -0.7);
     glutSolidSphere(0.4, 40, 40);
     glPopMatrix();
@@ -904,9 +961,25 @@ void drawRedEnemy() {
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, yellow);
+    glColor3f(1, 1, 0);
     glTranslatef(0.4, -1, -0.7);
     glutSolidSphere(0.4, 40, 40);
     glPopMatrix();
+  
+}
+void drawskyBoxes() {
+    glPushMatrix();
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, orange_yellow);
+    drawBoxes();
+    glPopMatrix();
+
+    glPushMatrix();
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, yellow);
+    glTranslatef(0, 0.8, 0);
+    glScalef(1.2, 0.3, 1);
+    drawBoxes();
+    glPopMatrix();
+
 }
 void drawAxes() {
 
@@ -937,7 +1010,58 @@ void drawAxes() {
 
     glEnd();
 }
+void enableLightSource() {
 
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_NORMALIZE);
+
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightSource);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, white);
+}
+void tree() {
+    glPushMatrix();
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, brown);
+    drawhorizontalcylinder(-90, 0, 2, 0.5, 5);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, treeGreen);
+    glTranslatef(0, 5, 0);
+    glutSolidSphere(3, 100, 100);
+    glTranslatef(2, 0, 0);
+    glutSolidSphere(2, 100, 100);
+    glTranslatef(-4, 0, 0);
+    glutSolidSphere(2, 100, 100);
+    glPopMatrix();
+}
+
+void drawSky() {
+    glPushMatrix();
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, blue);
+    glScalef(10,4, 12);
+    glTranslatef(0, 7.5, 0);
+    glutSolidSphere(0.5,100,100);
+    glPopMatrix();
+
+    glPushMatrix();
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, ashBlue);
+    glScalef(8, 4, 11);
+    glTranslatef(0, 8, 0);
+    glutSolidSphere(0.5, 100, 100);
+    glPopMatrix();
+
+    glPushMatrix();
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, ashBlue);
+    glScalef(8, 4, 11);
+    glTranslatef(0, 7.5, 0.5);
+    glutSolidSphere(0.5, 100, 100);
+    glPopMatrix();
+
+    glPushMatrix();
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, blue);
+    glScalef(9, 4, 11);
+    glTranslatef(0,7.5, 0.5);
+    glutSolidSphere(0.5, 100, 100);
+    glPopMatrix();
+}
 void drawScene() {
      
     glPushMatrix();
@@ -1065,18 +1189,153 @@ void drawScene() {
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, pale);
-    glTranslatef(0, 0, 2);
+    glTranslatef(0, 2, 2);
     pipline(4, 1, 1, 0.5, 1);
     glPopMatrix();
 
 
     glPushMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, teal);
-    glTranslatef(0, 0, 3);
+    glTranslatef(0, 4, 5);
     pipline(6, 1.2, 1.2, 0.6, 1.2);
     glPopMatrix();
 
+    glPushMatrix();
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, yellow);
+    glColor3f(1, 0.1, 0);
+    glTranslatef(0,8,5);
+    drawCoins();
+    glPushMatrix();
+    glTranslatef(3, 0, 0);
+    drawCoins();
+    glPushMatrix();
+    glTranslatef(4, 2, 0);
+    drawCoins();
+    glPushMatrix();
+    glTranslatef(7, 2, 0);
+    drawCoins();
+    glPushMatrix();
+    glTranslatef(8, 4, 0);
+    drawCoins();
+    glPopMatrix();
+
+    drawskyBoxes();
+
+    glPushMatrix();
+    glTranslatef(3,5,0);
+    drawskyBoxes();
+    glPopMatrix();
+
+
+    glPushMatrix();
+    glTranslatef(3, 5, 4);
+    drawskyBoxes();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(6, 5, 4);
+    drawskyBoxes();
+  
+    glTranslatef(0,2.5,0);
+    glRotatef(90,0,-1,0);
+    glTranslatef(0, 0, travel);
+    glRotatef(90, 0, -1, 0);
+    glTranslatef(travelup, -traveldown, travelfront);
+    glTranslatef(0,0, -travelleft);
+    drawBrownEnimy();
+    
+    glPopMatrix();
+   
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0, 1.5, -12);
+    glRotatef(xRotated, 0, 1, 0);
+    drawBrownEnimy();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0, 4.2, -12);
+    glRotatef(90, 0, 1, 0);
+    glRotatef(xRotated, 0, 1, 0);
+    drawBrownEnimy();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0, 7.0, -12);
+    glRotatef(180, 0, 1, 0);
+    glRotatef(xRotated, 0, 1, 0);
+    drawBrownEnimy();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0, 9.8, -12);
+    glRotatef(270, 0, 1, 0);
+    glRotatef(xRotated, 0, 1, 0);
+    drawBrownEnimy();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(-8, 7, 0);
+    glTranslatef(8, 0, 0);
+    glRotatef(xRotated-0.9,0,-1,0);
+    glTranslatef(17, ytranslateR-0.9, 0);
+    drawRedEnemy();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0, 0.1,15);
+    glScalef(0.5, 1.2, 0.5);
+    tree();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0, 0.1, 15);
+    glTranslatef(3,0,0);
+    glScalef(0.2, 1, 0.3);
+    tree();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0, 0.1, 15);
+    glTranslatef(3, 0, 0);
+    glScalef(0.8, 3, 0.3);
+    tree();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0, 0.1, 15);
+    glTranslatef(3, 4, 0);
+    glScalef(0.8, 1, 0.3);
+    tree();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0, 0.1, 15);
+    glTranslatef(6, 0, 0);
+    glScalef(0.4, 1, 0.3);
+    tree();
+    glPopMatrix();
+
+    glPushMatrix();
+    glScalef(0.8, 0.8, 0.8);
+    drawSky();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(4, 3, 3);
+    glScalef(0.5, 0.5, 0.5);
+    drawSky();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0, 3, -10);
+    glScalef(0.5, 0.5, 0.5);
+    drawSky();
+    glPopMatrix();
 }
+
+
 void display() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -1084,18 +1343,17 @@ void display() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-
-
     glEnable(GL_LIGHT0);
     GLfloat position[] = { 2.0,2.0,2.0,1.0 };
     glLightfv(GL_LIGHT0, GL_POSITION, position);
 
     /* set light intensities */
-    GLfloat white2[] = { 1.0,1.0,1.0,1.0 };
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, white2);
-    GLfloat white[] = { 1.0,1.0,1.0,1.0 };
-    glLightfv(GL_LIGHT0, GL_SPECULAR, white);
+   
+   
+   
+    
 
+   
 
     ///////
     //Translate the scene along the z axis
@@ -1131,7 +1389,7 @@ void display() {
      drawBrownEnimy();
      glPopMatrix();
   
-    drawScene();
+   drawScene();
     //  drawGrid();
     glPopMatrix();
 
@@ -1139,17 +1397,44 @@ void display() {
 
 }
 
+
 //Animation timer function
 void timer(int x) {
 
-   
+   // skyrotate += 0.1;
     
     /*if (xRotated == 360.0)
         xRotated = 0.0;
     else
         xRotated += 2.0;*/
-    
-    xRotated += 1;
+    travel += 0.5;
+    if (travel == 1) {
+        turn += 0.5;
+     //   travel = 0;
+    }
+
+    if (travel == 3) {
+        travelfront += 0.5;
+        traveldown += 0.5;
+      
+        travelside += 0.1;
+        travel = 0;
+    }
+    if (travelside == 1) {
+        travelside = 0;
+    }
+
+    if (traveldown == 5.5) {
+        traveldown = 0;
+        travelfront = 0;
+        travelup += 1;
+        travelleft += 2;
+    }
+    if (travelup == 2) {
+        travelleft = 0;
+        travelup = 0;
+    }
+    xRotated += 6;
 
     if (ytranslateR != 7) {
         ytranslateR += 1;
@@ -1192,6 +1477,8 @@ void keyboard(unsigned char key, int x, int y) {
 
     if (key == 'r')
         objY -= 1;
+    if (key == 'l')
+        enableLightSource();
 
     glutPostRedisplay();
 }
