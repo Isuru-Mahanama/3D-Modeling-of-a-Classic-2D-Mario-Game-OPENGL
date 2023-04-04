@@ -4,14 +4,17 @@
 #include <GL/glu.h>
 #include "models.h";
 #include "textures.h"
+
+
 #define PI 3.142857
 
 const GLfloat blue[4] = { 0.0f, 0.0f, 1.0f, 1.0f };
+const GLfloat darkblue[4] = { 0.0f, 0.0f, 0.1f, 1.0f };
 const GLfloat red[4] = { 1.0, 0.000, 0.000, 1.0 };
 const GLfloat white[4] = { 1.000, 1, 1, 1.0 };
 const GLfloat cream[4] = { 1.000, 0.627, 0.478 };
 const GLfloat brownlight[4] = { 0.722, 0.525, 0.043 };
-const GLfloat yellow[4] = { 1.000, 1.000, 0.000 };
+const GLfloat yellow[4] = { 0.90, 0.900, 0.000 };
 const GLfloat brown[4] = { 0.502, 0.000, 0.000, 1.0 };
 const GLfloat brown_b[4] = { 0.71, 0.44, 0.11, 1.0 };
 const GLfloat lightbrown[4] = { 0.824, 0.706, 0.549, 1.0 };
@@ -20,8 +23,11 @@ const GLfloat ashBlue[4] = { 0.392, 0.584, 0.929, 1.0 };
 const GLfloat steedBlue[4] = { 0.275, 0.510, 0.706, 1.0 };
 const GLfloat powderBlue[4] = { 0.690, 0.878, 0.902, 1.0 };
 const GLfloat dark_green[4] = { 0.000, 0.392, 0.000,1 };
-const GLfloat treeGreen[] = { 0,0.6,0 };
+const GLfloat treeGreen[] = { 0.0,0.1,0 };
 const GLfloat spring_green[4] = { 0.196, 0.804, 0.196 ,1.0 };
+const GLfloat green[4] = { 0.133, 0.545, 0.133,1.0 };
+const GLfloat goldenyellow[4] = { 1.0f, 0.72f, 0.11f };
+
 const GLfloat khaki[4] = { 0.941, 0.902, 0.549 ,1.0 };
 const GLfloat teal[4] = { 0.000, 0.502, 0.502 ,1.0 };
 const GLfloat pale[4] = { 0.686, 0.933, 0.933 ,1.0 };
@@ -34,9 +40,16 @@ const GLfloat dark_brown[4] = { 0.4f, 0.26f, 0.13f, 1.0 };
 
 bool useCamera1 = true;
 bool eyelightning = false;
+bool moveup = true;
 int redLight = 0;
+bool moveforward = true;
 
+bool marioController1 = true;
+
+GLfloat marioMovement = 0;
 GLfloat turn = 0;
+
+GLfloat moveturn = 0;
 
 GLfloat xRotated = 0;
 GLfloat travel = 0;
@@ -45,7 +58,7 @@ GLfloat travelfront = 0;
 GLfloat travelup = 0;
 GLfloat travelleft = 0;
 GLfloat sidemove = 0;
-
+GLfloat movingBluEnimy = 0;
 GLfloat travelside = 0;
 
 GLfloat xtranslate = 0;
@@ -64,9 +77,14 @@ GLfloat sceX = 0.0;
 GLfloat sceY = 0.0;
 GLfloat sceZ = 0.0;
 
-
+//varibles to change the location looking at
+GLfloat cenX = 0.0;
+GLfloat cenY = 0.0;
+GLfloat cenZ = 0.0;
 
 GLfloat sceRY = 0.0;
+GLfloat sceRX = 0.0;
+GLfloat sceRZ = 0.0;
 //variables to move the snowman
 GLfloat objX = 0.0;
 GLfloat objY = 0.0;
@@ -76,6 +94,7 @@ void init() {
 	//glClearColor(0.500, 0.527, 0.3, 1.0f);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	  // glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	//glLoadIdentity();
 	GLfloat globalAmbient[] = { 0.2, 0.2, 0.2, 1.0 };
 	glEnable(GL_DEPTH_TEST);
@@ -100,6 +119,8 @@ void init() {
 
 	loadExternalTextures();
 }
+
+
 
 void highWallY(GLfloat x, GLfloat y, GLfloat z, GLfloat len) {
 	cube(x, y, z, len, 2, 2);
@@ -244,7 +265,7 @@ void drawCoins() {
 	glPushMatrix();
 	glRotatef(xRotated, 0, 1, 0);
 	glScalef(0.2, 1, 1);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, yellow);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, goldenyellow);
 	glutSolidSphere(1, 100, 100);
 	glPopMatrix();
 }
@@ -1024,7 +1045,27 @@ void drawRedEnemy() {
 }
 
 
+void drawstealBoxes() {
 
+	glPushMatrix();
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 7);
+	glPushMatrix();
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, brown_b);
+	glTranslatef(0, -1, 0);
+	drawBoxes();
+	glPopMatrix();
+
+	glPushMatrix();
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, brown_b);
+	glTranslatef(0, 0.8, 0);
+	glScalef(1.2, 0.3, 1);
+	drawBoxes();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
+
+}
 void drawskyBoxes() {
 	
 	glPushMatrix();
@@ -1078,7 +1119,7 @@ void drawAxes() {
 
 void tree() {
 	glPushMatrix();
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, brown);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, dark_brown);
 	drawhorizontalcylinder(-90, 0, 2, 0.5, 5);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, treeGreen);
 	glTranslatef(0, 5, 0);
@@ -1094,23 +1135,17 @@ void drawsteps() {
 	glPushMatrix();
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, brown_b);
 	glTranslatef(0, sidemove - 0.5, -25);
-	glScalef(12, 0.2, 3);
+	glScalef(12, 0.4, 5);
 	glutSolidCube(1);
 	glPopMatrix();
 
-	glPushMatrix();
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, brown_b);
-	glTranslatef(0, -3, -32);
-	glTranslatef(sidemove - 0.5, 0, -25);
-	glScalef(12, 0.2, 3);
-	glutSolidCube(1);
-	glPopMatrix();
+
 
 	glPushMatrix();
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, brown_b);
 	glTranslatef(0, 3, -39);
 	glTranslatef(0, sidemove - 0.5, -25);
-	glScalef(12, 0.2, 3);
+	glScalef(12, 0.4, 5);
 	glutSolidCube(1);
 	glPopMatrix();
 
@@ -1118,7 +1153,7 @@ void drawsteps() {
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, brown_b);
 	glTranslatef(0, 0, -sidemove - 0.5);
 	glTranslatef(0, 4, -45);
-	glScalef(12, 0.2, 3);
+	glScalef(12, 0.4, 5);
 	glutSolidCube(1);
 	glPopMatrix();
 
@@ -1126,7 +1161,7 @@ void drawsteps() {
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, brown_b);
 	glTranslatef(0, 0, sidemove - 0.5);
 	glTranslatef(0, 5, -50);
-	glScalef(12, 0.2, 3);
+	glScalef(12, 0.4, 5);
 	glutSolidCube(1);
 	glPopMatrix();
 }
@@ -1140,15 +1175,51 @@ void drawSecondFreespace() {
 	glRotatef(90, 1, 0, 0);
 
 	glPushMatrix();
-	glRotatef(sceRY, 0.0, 0.0, 1.0);
-	drawCircle(20);
+	glPushMatrix();
+	glTranslatef(-6, -70, 0);
+	glScalef(8 ,25, 8);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 2);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, teal);
+	drawBoxes();
+	glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
+	//glRotatef(sceRY, 0.0, 0.0, 1.0);
+	
 
 	glPushMatrix();
-	glTranslatef(0, 0, -4);
+
+	glPushMatrix();
+	
+	glTranslatef(0, -60, -4);
 	glRotatef(90, -1, 0, 0);
+	
+	glScalef(3, 3, 6);
+	glTranslatef(0, 0, movingBluEnimy);
+	if (moveturn) {
+		glRotatef(180, 0, 1, 0);
+	}
 	glRotatef(180, 0, 1, 0);
-	glScalef(3, 3, 3);
 	drawBlueEnimey();
+	glPopMatrix();
+
+
+	glPushMatrix();
+
+	glTranslatef(0, -67, -4);
+	glRotatef(90, -1, 0, 0);
+
+	glScalef(3, 3, 6);
+	glTranslatef(0, 0, movingBluEnimy-0.2);
+	if (moveturn) {
+		glRotatef(180, 0, 1, 0);
+	}
+	glRotatef(180, 0, 1, 0);
+	drawBlueEnimey();
+	glPopMatrix();
+
+	
+
 	glPopMatrix();
 	glPopMatrix();
 
@@ -1158,7 +1229,7 @@ void drawSecondFreespace() {
 void drawSky() {
 	glPushMatrix();
 
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, blue);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, darkblue);
 	glScalef(10, 4, 12);
 	glTranslatef(0, 7.5, 0);
 	glutSolidSphere(0.5, 100, 100);
@@ -1179,7 +1250,7 @@ void drawSky() {
 	glPopMatrix();
 
 	glPushMatrix();
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, blue);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE,darkblue);
 	glScalef(9, 4, 11);
 	glTranslatef(0, 7.5, 0.5);
 	glutSolidSphere(0.5, 100, 100);
@@ -1198,18 +1269,41 @@ void drawSideWalls() {
 	drawSideWall();
 	glPopMatrix();
 }
+
+void drawFivecoins() {
+	glPushMatrix();
+	glTranslatef(5, 8, 5);
+	drawCoins();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(7, 8, 5);
+	drawCoins();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(9, 8, 5);
+	drawCoins();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(11, 8, 5);
+	drawCoins();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(13, 8, 5);
+	drawCoins();
+	glPopMatrix();
+}
 void drawScene() {
 
-	
-	
-	
 	glPushMatrix();
-	
 	drawSecondFreespace();
 	glPopMatrix();
 
 	glPushMatrix();
-	
+	glTranslatef(0,0,-30);
 	drawsteps();
 	glPopMatrix();
 
@@ -1231,9 +1325,16 @@ void drawScene() {
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(10, 0, -527);
+	glTranslatef(30, 0, -527);
 	glRotatef(90, 0, 1, 0);
-	glScalef(12, 1, 1.1);
+	glScalef(12, 1, 0.4);
+	drawSideWalls();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-22, 0, -527);
+	glRotatef(90, 0, 1, 0);
+	glScalef(12, 1, 0.4);
 	drawSideWalls();
 	glPopMatrix();
 
@@ -1242,38 +1343,45 @@ void drawScene() {
 
 	glPushMatrix();
 	glRotatef(-90, 1, 0, 0);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, dark_green);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, green);
 	drawGround();
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(-8, 0.5, -18);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, spring_green);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glScalef(3, 3, 3);
+	glPushMatrix();
+	glTranslatef(-5, 0.5, -15);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, brown_b);
 	drawBoxes();
 	glPopMatrix();
 
 
 	glPushMatrix();
-	glTranslatef(-8, 1.5, -18);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, spring_green);
+	glTranslatef(-5, 1.5, -15);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, brown_b);
 	drawBoxes();
 	glPopMatrix();
 
 
 	glPushMatrix();
-	glTranslatef(-8, 2.5, -18);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, spring_green);
+	glTranslatef(-5, 2.5, -15);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, brown_b);
 	drawBoxes();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
 
 	glPushMatrix();
 	glTranslatef(0, ytranslateR, 0);
-	glTranslatef(-8, 4.5, -18);
+	glTranslatef(-12, 14.5, -42);
+	glScalef(2.5, 2.5, 2.5);
 	drawRedEnemy();
 	glPopMatrix();
 
 	glPushMatrix();
-	glScalef(3, 3, 3);
+	glScalef(6, 6,6);
 	glPushMatrix();
 	glTranslatef(0, 0., 0);
 	glRotatef(-90, 1, 0, 0);
@@ -1363,61 +1471,98 @@ void drawScene() {
 
 	glPushMatrix();
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, teal);
-	glTranslatef(3, 0, -7);
+	glTranslatef(15, 5, -9);
 	glScalef(2, 2, 2);
-	pipline(2, 0.8, 0.8, 0.4, 0.8);
+	pipline(4, 1.6, 1.6, 0.8, 1.6);
 	glPopMatrix();
 
 	glPushMatrix();
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, pale);
-	glTranslatef(3, 4, -1);
+	glTranslatef(15, 12, -3);
 	glScalef(2, 2, 2);
-	pipline(4, 1, 1, 0.5, 1);
+	pipline(8, 2, 2, 1, 2);
 	glPopMatrix();
 
 
 	glPushMatrix();
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, teal);
-	glTranslatef(3, 8, 5);
+	glTranslatef(15, 20, 7);
 	glScalef(2, 2, 2);
-	pipline(6, 1.2, 1.2, 0.6, 1.2);
+	pipline(12, 2.4, 2.4, 1.2, 2.4);
 	glPopMatrix();
 
+
+	//pipline which is alone
 	glPushMatrix();
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, teal);
+	glTranslatef(-45, 6, 23);
+	glScalef(3, 3, 3);
+	pipline(4, 1.6, 1.6, 0.8, 1.6);
+	glPopMatrix();
+
+	//drawmario on top of the pipline
+	glPushMatrix();
+	glTranslatef(-24, 15, 19);
+	glTranslatef( 0, marioMovement-2, 0);
+	glRotatef(90, 0, 1, 0);
+	glScalef(2.5, 2.5, 2.5);
+	drawMario();
+	glPopMatrix();
+	
+	glPushMatrix();
+
 	//glMaterialfv(GL_FRONT, GL_DIFFUSE, yellow);
-	glColor3f(1, 0.1, 0);
-	glTranslatef(-15, 8, 5);
-	drawCoins();
+	/*glColor3f(1, 0.1, 0);
+	
+	glTranslatef(-20, 2, 0);
+	drawCoins();*/
 	//  glPopMatrix();
 
+	glScalef(3, 3, 3);
 	glPushMatrix();
-	glTranslatef(3, 0, 0);
-	drawCoins();
-	glPushMatrix();
+	glTranslatef(-11, 3, -7);
+	//drawCoins();
+
+/*	glPushMatrix();
 	glTranslatef(4, 2, 0);
 	drawCoins();
-	glPopMatrix();
+	glPopMatrix();*/
 
-	glPushMatrix();
+  /*glPushMatrix();
 	glTranslatef(4, 5, 4);
 	drawCoins();
 	glPopMatrix();
+	*/
 
+	// Five coins inline
 
 	glPushMatrix();
-	glTranslatef(5, 3, 3);
-	drawCoins();
+	glTranslatef(-3, 0, 0);
+	drawFivecoins();
 	glPopMatrix();
 
+	glPushMatrix();
+	glTranslatef(-3, 3, 0);
+	drawFivecoins();
+	glPopMatrix();
+
+	//
 
 	glPushMatrix();
-	glTranslatef(4, 0, -2);
+	glTranslatef(4, -0.5, -2);
 	drawskyBoxes();
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(3, 5, -8);
-	drawskyBoxes();
+	glPushMatrix();
+	glTranslatef(20, -0.5, -4);
+	drawstealBoxes();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(20, 2, -4);
+	drawstealBoxes();
+	glPopMatrix();
 	glPopMatrix();
 
 
@@ -1437,11 +1582,12 @@ void drawScene() {
 	glTranslatef(0, 0, -travelleft);
 	drawBrownEnimy();
 	glPopMatrix();
+
 	glPopMatrix();
 	glPopMatrix();
 
 	glPushMatrix();
-	glScalef(1.2, 1.2, 1.2);
+	glScalef(2.5, 2.5, 2.5);
 	glPushMatrix();
 	glTranslatef(0, 1.5, -12);
 	glRotatef(xRotated, 0, 1, 0);
@@ -1472,44 +1618,45 @@ void drawScene() {
 
 
 	glPushMatrix();
-	glTranslatef(-8, 7, 0);
-	glTranslatef(8, 0, 0);
+	glTranslatef(10, 7, 0);
+//	glTranslatef(8, 0, 0);
 	glRotatef(xRotated - 100, 0, -1, 0);
 	glTranslatef(17, ytranslateR - 0.9, 0);
+	glScalef(2.5, 2.5, 2.5);
 	drawRedEnemy();
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(0, 0.1, 15);
-	glScalef(0.5, 1.2, 0.5);
+	glTranslatef(8, 0.9, 20);
+	glScalef(1, 2.4, 1);
 	tree();
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(0, 0.1, 15);
-	glTranslatef(3, 0, 0);
-	glScalef(0.2, 1, 0.3);
+	glTranslatef(0, 0.9, 20);
+	glTranslatef(11, 0, 0);
+	glScalef(0.4, 2, 0.6);
 	tree();
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(0, 0.1, 15);
-	glTranslatef(3, 0, 0);
-	glScalef(0.8, 3, 0.3);
+	glTranslatef(0, 0.9, 20);
+	glTranslatef(15, 0, 0);
+	glScalef(1.6, 6, 0.6);
 	tree();
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(0, 0.1, 15);
-	glTranslatef(3, 4, 0);
-	glScalef(0.8, 1, 0.3);
+	glTranslatef(0, 0.9, 20);
+	glTranslatef(11, 4, 0);
+	glScalef(1.6, 2, 0.6);
 	tree();
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(0, 0.1, 15);
-	glTranslatef(6, 0, 0);
-	glScalef(0.4, 1, 0.3);
+	glTranslatef(0, 0.9, 20);
+	glTranslatef(14, 0, 0);
+	glScalef(0.8, 2, 0.6);
 	tree();
 	glPopMatrix();
 
@@ -1531,26 +1678,121 @@ void drawScene() {
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(0, 2, 6);
+	glTranslatef(0, 10, 18);
 	drawCoins();
 	glPopMatrix();
 
 
 }
-
-void drawFinalScene() {
-
-
-	//Draw a grid on the xz plane
+void secondLargearea() {
 	glPushMatrix();
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
-	glColor3f(1, 1, 1);
+	//floor
+	
+	glPushMatrix();
+	glRotatef(90, 1, 0, 0);
+//	glTranslatef(-45, -40, 0);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 2);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, teal);
+	glScalef(15, 15, 1);
+	drawBoxes();
+	glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
+	//drawBoxes();
+	
+
+	//sidewall
+	glPushMatrix();
+	glTranslatef(0, 0, 0);
+//	glRotatef(90, 1, 0, 0);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 2);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, teal);
+	glScalef(15, 15, 1);
+	drawBoxes();
+	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
 
-	//draw the three axes
+	//sidewall
+	// //sidewall
+	glPushMatrix();
+	glTranslatef(0, 0, 32);
+	glRotatef(90, 0, 1, 0);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 2);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, teal);
+	glScalef(15, 15, 1);
+	drawBoxes();
+	glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
+	//drawBoxes();
 
-  //  cube(-50, 25, -6, 100, 0.2, 7);
-	//snowman
+	//sidewall
+	glPushMatrix();
+	glTranslatef(28, 0, 30);
+	glRotatef(90, 0, 1, 0);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 2);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, teal);
+	glScalef(15, 15, 1);
+	drawBoxes();
+	glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
+
+	//sidewall
+	glPushMatrix();
+	glTranslatef(0, 0, 30);
+	//	glRotatef(90, 1, 0, 0);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 2);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, teal);
+	glScalef(15, 15, 1);
+	drawBoxes();
+	glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
+
+
+	//other floor
+	glPushMatrix();
+	glRotatef(90, 1, 0, 0);
+	glTranslatef(0, 0, -30);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 2);
+	glScalef(15, 15, 1);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, teal);
+	drawBoxes();
+	glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(6, 3, 5);
+	glScalef(4, 4, 4);
+	drawskyBoxes();
+	glPopMatrix();
+	
+
+	glPushMatrix();
+	glTranslatef(6, 3, 5);
+	glScalef(4, 4, 4);
+	drawskyBoxes();
+	glPopMatrix();
+
+	glPopMatrix();
+}
+void drawFinalScene() {
+	glPushMatrix();
+	
+    glTranslatef(0, 0, -550);
+	glScalef(10, 6, 10);
+	glRotatef(sceRY, 0, 1, 0);
+	glRotatef(sceRX, 1, 0, 0);
+	glRotatef(sceRZ, 0, 0, 1);
+	glTranslatef(-14,-14,-14);
+	secondLargearea();
+	glPopMatrix();
+
+	//Draw a grid on the xz plane
+
 	glPushMatrix();
 	//drawMario();
 	glPopMatrix();
@@ -1560,13 +1802,13 @@ void drawFinalScene() {
 
 	// glTranslatef(x + cos(i) * radius, 0, z + sin(i) * radius);
 	glRotatef(xRotated, 0, -1, 0);
-	glTranslatef(1.5, 4.5, 1.5);
-	//  glRotatef(xRotated, 0, 1, 0);
-	glTranslatef(20, 0, 0);
+	glTranslatef(40, 10.5, 6.5);
+	
 	glPushMatrix();
-	glScalef(2.5, 2.5, 2.5);
+	glScalef(6.5, 6.5, 6.5);
 	drawBrownEnimy();
 	glPopMatrix();
+
 	glPopMatrix();
 
 	glPushMatrix();
@@ -1602,7 +1844,7 @@ void glEnableEyesLightinig() {
 }
 void forbavkground() {
 	GLfloat L_Ambient[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat L_Diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat L_Diffuse[] = { 1.0, 0.7, 0.7, 1.0 };
 	GLfloat L_Specular[] = { 1.0, 1.0, 1.0, 1.0 };
 	GLfloat L_SpotDirection[] = { 0.0, -1.0, 0.0 };
 	GLfloat light_position[] = { 3.0, 3.0, 0.0, 1.0 };
@@ -1653,12 +1895,16 @@ void display() {
 		//  enableLighSourceforFirstScene();
 		glTranslatef(0.0f, 0.0f, objZ);
 		glPushMatrix();
-		gluLookAt(0 + camX, 130 + camY, 2.5 + camZ, 0, 0, 0, 0, 1.0, 0);
+		gluLookAt(0 + camX, 130 + camY, 2.5 + camZ, 0+cenX, 0+cenY, 0+cenZ, 0, 1.0, 0);
 		//    gluLookAt(25.0, 25.0 + camY, 0.0, 7.0, -8.0, 0.0, 0.0, 1.0, 0.0);
-		glRotatef(sceRY, 0.0, 1.0, 0.0);
+		glRotatef(sceY, 0.0, 1.0, 0.0);
 		glTranslatef(0.0, 0.0, sceZ);
-		glTranslatef(0.0, sceY, 0);
+	//	glTranslatef(0.0, sceY, 0);
 		glTranslatef(sceX, 0, 0);
+
+
+		
+
 		drawFinalScene();
 		glPopMatrix();
 	}
@@ -1676,10 +1922,10 @@ void display() {
 		gluLookAt(0 + camX, 10.0 + camY, +50.0 + camZ, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 		// glTranslatef(0,0,-100);
 
-		glRotatef(sceRY, 0.0, 1.0, 0.0);
+		glRotatef(sceY, 0.0, 1.0, 0.0);
 		//    glTranslatef(0, -30, 90);
 		glTranslatef(0.0, 0.0, sceZ);
-		glTranslatef(0.0, sceY, 0);
+	//	glTranslatef(0.0, sceY, 0);
 		glTranslatef(sceX, 0, 0);
 
 		drawFinalScene();
@@ -1745,14 +1991,54 @@ void timer(int x) {
 		}
 	}
 
-	if (sidemove != 25) {
+	//movement of the steps
+
+	if (moveup) {
 		sidemove += 1;
 	}
 	if (sidemove == 25) {
-		for (int i = 0; i < 25; i++) {
-			sidemove--;
-		}
+		moveup = false;
 	}
+	if (!moveup) {
+		sidemove -= 1;
+	}
+	if (sidemove == 0) {
+		moveup = true;
+	}
+
+	// movement of blue color enimy
+
+	if (moveforward) {
+		movingBluEnimy += 0.5;
+	}
+	if (movingBluEnimy == 6) {
+		moveforward = false;
+		moveturn = false;
+	}
+	if (!moveforward) {
+		movingBluEnimy -= 0.5;
+	}
+	if (movingBluEnimy == 1) {
+		moveforward = true;
+		moveturn = true;
+	}
+
+
+	//movement of the mario
+	if (marioController1) {
+		marioMovement += 1;
+	}
+	if (marioMovement == 4) {
+		marioController1 = false;
+	}
+	if (!marioController1) {
+		marioMovement -= 1;
+	}
+	if (marioMovement == -15) {
+		marioController1 = true;
+	}
+
+
 	glutPostRedisplay();
 
 	glutTimerFunc(60.0, timer, 1);
@@ -1760,42 +2046,42 @@ void timer(int x) {
 
 void keyboardSpecial(int key, int x, int y) {
 	if (key == GLUT_KEY_UP)
-		camZ -= 1;
+		camZ -= 3;
 
 	if (key == GLUT_KEY_DOWN)
-		camZ += 1;
+		camZ += 3;
 
 	if (key == GLUT_KEY_RIGHT)
-		sceRY += 1;
+		sceY += 3;
 
 	if (key == GLUT_KEY_LEFT)
-		sceRY -= 1;
+		sceY -= 3;
 
 
 	if (key == GLUT_KEY_F1)
-		objZ -= 1;
+		objZ -= 3;
 
 	if (key == GLUT_KEY_F2)
-		objZ += 1;
+		objZ += 3;
 
 	glutPostRedisplay();
 }
 
 void keyboard(unsigned char key, int x, int y) {
 	if (key == 'l')
-		camX += 1;
+		camX += 3;
 
 	if (key == 'r')
-		camX -= 1;
+		camX -= 3;
 	if (key == 'f')
-		sceZ += 1;
+		sceZ += 3;
 
 	if (key == 'b')
 		sceZ -= 1;
 	if (key == 'u')
-		camY += 1;
+		camY += 3;
 	if (key == 'd')
-		camY -= 1;
+		camY -= 3;
 
 	if (key == 'x')
 		sceX += 1;
@@ -1810,7 +2096,24 @@ void keyboard(unsigned char key, int x, int y) {
 		enableLighSourceforFirstScene();
 	if (key == '2')
 		forbavkground();
-
+	if (key == '6')
+		sceRY += 1;
+	if (key == '7')
+		sceRX += 1;
+	if (key == '8')
+		sceRZ += 1;
+	if (key == 'g')
+		cenX += 3;
+	if (key == 'h')
+		cenY += 3;
+	if (key == 'j')
+		cenZ += 3;
+	if (key == 'G')
+		cenX -= 3;
+	if (key == 'H')
+		cenY -= 3;
+	if (key == 'J')
+		cenZ -= 3;
 	glutPostRedisplay();
 }
 
