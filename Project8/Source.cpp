@@ -4,9 +4,10 @@
 #include <GL/glu.h>
 #include "models.h";
 #include "textures.h"
-
-
 #define PI 3.142857
+
+
+//setup colors
 
 const GLfloat blue[4] = { 0.0f, 0.0f, 1.0f, 1.0f };
 const GLfloat darkblue[4] = { 0.0f, 0.0f, 0.1f, 1.0f };
@@ -27,7 +28,6 @@ const GLfloat treeGreen[] = { 0.0,0.1,0 };
 const GLfloat spring_green[4] = { 0.196, 0.804, 0.196 ,1.0 };
 const GLfloat green[4] = { 0.133, 0.545, 0.133,1.0 };
 const GLfloat goldenyellow[4] = { 1.0f, 0.72f, 0.11f };
-
 const GLfloat khaki[4] = { 0.941, 0.902, 0.549 ,1.0 };
 const GLfloat teal[4] = { 0.000, 0.502, 0.502 ,1.0 };
 const GLfloat pale[4] = { 0.686, 0.933, 0.933 ,1.0 };
@@ -38,12 +38,12 @@ const GLfloat lightBlue[4] = { 0.1, 0.584, 0.929, 1.0 };
 const GLfloat ashcolor[4] = { 0.698, 0.745, 0.71, 1.0 };
 const GLfloat dark_brown[4] = { 0.4f, 0.26f, 0.13f, 1.0 };
 
+//setting up camaras
 bool useCamera1 = true;
-bool eyelightning = false;
-bool moveup = true;
-int redLight = 0;
-bool moveforward = true;
 
+//movement controllers
+bool moveup = true;
+bool moveforward = true;
 bool marioController1 = true;
 
 GLfloat marioMovement = 0;
@@ -91,28 +91,16 @@ GLfloat objY = 0.0;
 GLfloat objZ = 0.0;
 
 void init() {
-	//glClearColor(0.500, 0.527, 0.3, 1.0f);
-
+	
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	  // glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	//glLoadIdentity();
+	 
 	GLfloat globalAmbient[] = { 0.2, 0.2, 0.2, 1.0 };
 	glEnable(GL_DEPTH_TEST);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-//	glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
-	//glEnable(GL_LINE_SMOOTH);
-	//glEnable(GL_BLEND);
-	/////glEnable(GL_CULL_FACE);
-	//glShadeModel(GL_SMOOTH);
+	
 
 	glEnable(GL_LIGHTING);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-	//glShadeModel(GL_SMOOTH);
-//	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
-
-   //glEnable(GL_COLOR_MATERIAL);
 
 
 	glEnable(GL_NORMALIZE);
@@ -126,14 +114,18 @@ void highWallY(GLfloat x, GLfloat y, GLfloat z, GLfloat len) {
 	cube(x, y, z, len, 2, 2);
 }
 
+
+//drawing boxes-basic components
+
 void drawBoxes() {
 	glPushMatrix();
 	highWallY(0, 0, 0, 2);
 	glPopMatrix();
 }
 
+// drawing cylinder - basic component
 void drawCyllicder() {
-	//  glBegin(GL_POLYGON);
+	
 	GLUquadric* qobj;
 	qobj = gluNewQuadric();
 	gluQuadricNormals(qobj, GLU_SMOOTH);
@@ -142,9 +134,11 @@ void drawCyllicder() {
 	glTranslatef(0, 0.5, 0);
 	gluCylinder(qobj, 0.3, 0.3, 1.5, 100, 100);
 	glPopMatrix();
-	//  glEnd();
+	
 
 }
+
+// drawing horizontal cylinder basic component
 void drawhorizontalcylinder(double angle, int angleAxis, double baseRadius, double topRadius, double height) {
 	GLUquadric* qobj;
 	qobj = gluNewQuadric();
@@ -170,6 +164,9 @@ void drawhorizontalcylinder(double angle, int angleAxis, double baseRadius, doub
 	gluCylinder(qobj, baseRadius, topRadius, height, 100, 100);
 	glPopMatrix();
 }
+
+//drawing circle - basic component
+
 void drawCircle(double radius) {
 	int d;
 	glBegin(GL_POLYGON);
@@ -181,8 +178,9 @@ void drawCircle(double radius) {
 	glEnd();
 }
 
-void drawHat() {
+//drawong the hat of the mario
 
+void drawHat() {
 
 	GLUquadric* qobj;
 	qobj = gluNewQuadric();
@@ -198,10 +196,9 @@ void drawHat() {
 	drawCircle(0.8);
 	glPopMatrix();
 
-
-
-
 }
+
+//drawing the eyebrow of mario
 
 void EyebrowMario(double radius) {
 	glPushMatrix();
@@ -209,6 +206,8 @@ void EyebrowMario(double radius) {
 	drawCircle(radius);
 	glPopMatrix();
 }
+
+//drawing the mustache of mario
 
 void mustache(double radius) {
 	glPushMatrix();
@@ -230,8 +229,6 @@ void drawEyemario(double radius) {
 	glTranslatef(0.8, -0.26, 0);
 	glutSolidSphere(0.13, 20, 20);
 	glPopMatrix();
-
-
 
 	glPushMatrix();
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
@@ -264,7 +261,7 @@ void drawCoins() {
 
 	glPushMatrix();
 	glRotatef(xRotated, 0, 1, 0);
-	glScalef(0.2, 1, 1);
+	glScalef(0.1, 0.5, 0.5);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, goldenyellow);
 	glutSolidSphere(1, 100, 100);
 	glPopMatrix();
@@ -477,10 +474,8 @@ void drawGround() {
 
 void drawSideWall() {
 	glPushMatrix();
-	//glTranslatef(-45, -40, 0);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 3);
-	//glScalef(45, 45, 0.5);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, brown_b);
 	drawBoxes();
 	glDisable(GL_TEXTURE_2D);
@@ -514,6 +509,7 @@ void drawshoeMario() {
 
 }
 
+//complete mario character
 void drawMario()
 {
 
@@ -635,7 +631,7 @@ void drawMario()
 
 
 }
-
+//drawing brown color enimy
 void drawBrownEnimy() {
 	glPushMatrix();
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, brown);
@@ -735,7 +731,7 @@ void drawBrownEnimy() {
 	glPopMatrix();
 
 }
-
+//creating blue color enimy
 void drawBlueEnimey() {
 	glPushMatrix();
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, powderBlue);
@@ -811,26 +807,7 @@ void drawBlueEnimey() {
 
 }
 
-
-
-void drawGrid() {
-	GLfloat step = 1.0f;
-	GLint line;
-
-	glBegin(GL_POLYGON);
-	for (line = -40; line <= 40; line += step) {
-		glVertex3f(line, -0.4, 40);
-		glVertex3f(line, -0.4, -40);
-
-		glVertex3f(40, -0.4, line);
-		glVertex3f(-40, -0.4, line);
-	}
-
-	glEnd();
-}
-
-
-
+//draw Red color enimy
 void drawRedEnemy() {
 
 
@@ -1044,7 +1021,7 @@ void drawRedEnemy() {
 
 }
 
-
+//creating steal boxes
 void drawstealBoxes() {
 
 	glPushMatrix();
@@ -1066,6 +1043,8 @@ void drawstealBoxes() {
 	glPopMatrix();
 
 }
+
+//drawing sky boxes
 void drawskyBoxes() {
 	
 	glPushMatrix();
@@ -1087,36 +1066,8 @@ void drawskyBoxes() {
 	glPopMatrix();
 
 }
-void drawAxes() {
 
-	glBegin(GL_LINES);
-
-	glLineWidth(10);
-
-
-	const GLfloat red[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, red);
-	glColor3f(1.0, 0.0, 0.0);
-	glVertex3f(-200, 0, 0);
-	glVertex3f(200, 0, 0);
-
-
-
-	const GLfloat green[4] = { 0.0f, 1.0f, 0.0f, 1.0f };
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, green);
-	glColor3f(0.0, 1.0, 0.0);
-	glVertex3f(0, -200, 0);
-	glVertex3f(0, 200, 0);
-
-
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, blue);
-	glColor3f(0.0, 0.0, 1.0);
-	glVertex3f(0, 0, -200);
-	glVertex3f(0, 0, 200);
-
-	glEnd();
-}
-
+//creating the tree
 void tree() {
 	glPushMatrix();
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, dark_brown);
@@ -1131,6 +1082,7 @@ void tree() {
 	glPopMatrix();
 }
 
+// drawing the steps
 void drawsteps() {
 	glPushMatrix();
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, brown_b);
@@ -1152,7 +1104,7 @@ void drawsteps() {
 	glPushMatrix();
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, brown_b);
 	glTranslatef(0, 0, -sidemove - 0.5);
-	glTranslatef(0, 4, -45);
+	glTranslatef(0, 5, -45);
 	glScalef(12, 0.4, 5);
 	glutSolidCube(1);
 	glPopMatrix();
@@ -1165,7 +1117,7 @@ void drawsteps() {
 	glutSolidCube(1);
 	glPopMatrix();
 }
-
+//drawing the connector between two scenes
 void drawSecondFreespace() {
 
 
@@ -1182,11 +1134,9 @@ void drawSecondFreespace() {
 	glBindTexture(GL_TEXTURE_2D, 2);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, teal);
 	drawBoxes();
+
 	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
-	//glRotatef(sceRY, 0.0, 0.0, 1.0);
-	
-
 	glPushMatrix();
 
 	glPushMatrix();
@@ -1206,7 +1156,7 @@ void drawSecondFreespace() {
 
 	glPushMatrix();
 
-	glTranslatef(0, -67, -4);
+	glTranslatef(0, -73, -4);
 	glRotatef(90, -1, 0, 0);
 
 	glScalef(3, 3, 6);
@@ -1226,37 +1176,8 @@ void drawSecondFreespace() {
 	glPopMatrix();
 
 }
-void drawSky() {
-	glPushMatrix();
 
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, darkblue);
-	glScalef(10, 4, 12);
-	glTranslatef(0, 7.5, 0);
-	glutSolidSphere(0.5, 100, 100);
-	glPopMatrix();
-
-	glPushMatrix();
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, ashBlue);
-	glScalef(8, 4, 11);
-	glTranslatef(0, 8, 0);
-	glutSolidSphere(0.5, 100, 100);
-	glPopMatrix();
-
-	glPushMatrix();
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, ashBlue);
-	glScalef(8, 4, 11);
-	glTranslatef(0, 7.5, 0.5);
-	glutSolidSphere(0.5, 100, 100);
-	glPopMatrix();
-
-	glPushMatrix();
-	glMaterialfv(GL_FRONT, GL_DIFFUSE,darkblue);
-	glScalef(9, 4, 11);
-	glTranslatef(0, 7.5, 0.5);
-	glutSolidSphere(0.5, 100, 100);
-	glPopMatrix();
-}
-
+// drawing side walls
 void drawSideWalls() {
 	glPushMatrix();
 	glRotatef(-90, 0, 0, 1);
@@ -1269,7 +1190,7 @@ void drawSideWalls() {
 	drawSideWall();
 	glPopMatrix();
 }
-
+//drawing five coins inline
 void drawFivecoins() {
 	glPushMatrix();
 	glTranslatef(5, 8, 5);
@@ -1296,6 +1217,8 @@ void drawFivecoins() {
 	drawCoins();
 	glPopMatrix();
 }
+
+//drawing the first scene along with the connector
 void drawScene() {
 
 	glPushMatrix();
@@ -1470,6 +1393,38 @@ void drawScene() {
 	glPopMatrix();
 
 	glPushMatrix();
+	//drawing coins as steps
+	glPushMatrix();
+	
+	
+
+	glPushMatrix();
+	glTranslatef(30, 33, 3);
+	glScalef(3, 3, 3);
+	drawCoins();
+	glPopMatrix();
+	//
+	glPushMatrix();
+	glTranslatef(30, 30, -6);
+	glScalef(3, 3, 3);
+	drawCoins();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(30, 24, -9);
+	glScalef(3, 3, 3);
+	drawCoins();
+	glPopMatrix();
+	//
+	glPushMatrix();
+	glTranslatef(30, 16, -14);
+	glScalef(3, 3, 3);
+	drawCoins();
+	glPopMatrix();
+
+
+	glPopMatrix();
+
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, teal);
 	glTranslatef(15, 5, -9);
 	glScalef(2, 2, 2);
@@ -1495,8 +1450,8 @@ void drawScene() {
 	//pipline which is alone
 	glPushMatrix();
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, teal);
-	glTranslatef(-45, 6, 23);
-	glScalef(3, 3, 3);
+	glTranslatef(-45, 2, 23);
+	glScalef(3, 4, 3);
 	pipline(4, 1.6, 1.6, 0.8, 1.6);
 	glPopMatrix();
 
@@ -1511,12 +1466,7 @@ void drawScene() {
 	
 	glPushMatrix();
 
-	//glMaterialfv(GL_FRONT, GL_DIFFUSE, yellow);
-	/*glColor3f(1, 0.1, 0);
 	
-	glTranslatef(-20, 2, 0);
-	drawCoins();*/
-	//  glPopMatrix();
 
 	glScalef(3, 3, 3);
 	glPushMatrix();
@@ -1628,55 +1578,39 @@ void drawScene() {
 
 	glPushMatrix();
 	glTranslatef(8, 0.9, 20);
-	glScalef(1, 2.4, 1);
+	glScalef(1.5, 2.4, 1);
 	tree();
 	glPopMatrix();
 
 	glPushMatrix();
 	glTranslatef(0, 0.9, 20);
 	glTranslatef(11, 0, 0);
-	glScalef(0.4, 2, 0.6);
+	glScalef(0.6, 2, 0.8);
 	tree();
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(0, 0.9, 20);
+	glTranslatef(3, 0, 18);
 	glTranslatef(15, 0, 0);
-	glScalef(1.6, 6, 0.6);
+	glScalef(3, 6, 3);
 	tree();
 	glPopMatrix();
 
 	glPushMatrix();
 	glTranslatef(0, 0.9, 20);
 	glTranslatef(11, 4, 0);
-	glScalef(1.6, 2, 0.6);
+	glScalef(1.6, 2, 1);
 	tree();
 	glPopMatrix();
 
 	glPushMatrix();
 	glTranslatef(0, 0.9, 20);
 	glTranslatef(14, 0, 0);
-	glScalef(0.8, 2, 0.6);
+	glScalef(1, 2, 1);
 	tree();
 	glPopMatrix();
-
-	glPushMatrix();
-	glScalef(0.8, 0.8, 0.8);
-	drawSky();
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(4, 3, 3);
-	glScalef(0.5, 0.5, 0.5);
-	drawSky();
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(0, 3, -10);
-	glScalef(0.5, 0.5, 0.5);
-	drawSky();
-	glPopMatrix();
-
+	
+	
 	glPushMatrix();
 	glTranslatef(0, 10, 18);
 	drawCoins();
@@ -1684,6 +1618,8 @@ void drawScene() {
 
 
 }
+
+// drawing the second scene
 void secondLargearea() {
 	glPushMatrix();
 	//floor
@@ -1747,7 +1683,7 @@ void secondLargearea() {
 	glBindTexture(GL_TEXTURE_2D, 2);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, teal);
 	glScalef(15, 15, 1);
-	drawBoxes();
+	//drawBoxes();
 	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
 
@@ -1777,14 +1713,58 @@ void secondLargearea() {
 	drawskyBoxes();
 	glPopMatrix();
 
+
+	glPushMatrix();
+	glTranslatef(1, 3, 5);
+	glScalef(4, 4, 4);
+	drawskyBoxes();
 	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(14, 8, 8);
+	glRotatef(90, 1, 0, 0);
+	glScalef(4, 4, 4);
+	drawstealBoxes();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-9, -10, -8);
+	glScalef(2.7, 2.7, 2.7);
+	drawFivecoins();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-9, -6, -8);
+	glScalef(2.7, 2.7, 2.7);
+	drawFivecoins();
+	glPopMatrix();
+
+
+	glPushMatrix();
+	glTranslatef(-9, -2, -8);
+	glScalef(2.7, 2.7, 2.7);
+	drawFivecoins();
+	glPopMatrix();
+
+	
+
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(13, 5, 72);
+	glScalef(0.3, 0.3, 0.3);
+	drawSecondFreespace();
+	glPopMatrix();
+
 }
+
+// drawing the full scene
 void drawFinalScene() {
 	glPushMatrix();
 	
-    glTranslatef(0, 0, -550);
+    glTranslatef(0, 0, -700);
 	glScalef(10, 6, 10);
-	glRotatef(sceRY, 0, 1, 0);
+	//glRotatef(sceRY, 0, 1, 0);
 	glRotatef(sceRX, 1, 0, 0);
 	glRotatef(sceRZ, 0, 0, 1);
 	glTranslatef(-14,-14,-14);
@@ -1800,7 +1780,7 @@ void drawFinalScene() {
 	 //drawBlueEnimey();
 	glPushMatrix();
 
-	// glTranslatef(x + cos(i) * radius, 0, z + sin(i) * radius);
+
 	glRotatef(xRotated, 0, -1, 0);
 	glTranslatef(40, 10.5, 6.5);
 	
@@ -1817,32 +1797,16 @@ void drawFinalScene() {
 	glPopMatrix();
 	//  drawGrid();
 }
+
+// Enable the light sources
 void enabling() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_NORMALIZE);
 }
-void glEnableEyesLightinig() {
-	GLfloat light_position[] = { 0.f, 10.0f, 0.0f, 1.0f };
-	GLfloat light_diffuse[] = { 1.0f, 1.f, 0.f, 1.0f };
-	GLfloat spot_direction[] = { 0.0f, -1.0f, 0.0f };
 
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT1);
-
-	glLightfv(GL_LIGHT1, GL_POSITION, light_position);
-	glLightfv(GL_LIGHT1, GL_POINT, light_diffuse);
-	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_direction);
-	//  glLightf(GL_LIGHT1, GL_SPOT_CUTOFF,0.0000000000001f);
-
-	glPushMatrix();
-	glTranslatef(-0.3, 1.0, 0.6);
-	glColor3f(0.5f, 0.5f, 0.5f);
-	glutSolidSphere(0.1, 40, 40);
-	glPopMatrix();
-
-}
-void forbavkground() {
+// enabling the light source two
+void whitelighsource() {
 	GLfloat L_Ambient[] = { 1.0, 1.0, 1.0, 1.0 };
 	GLfloat L_Diffuse[] = { 1.0, 0.7, 0.7, 1.0 };
 	GLfloat L_Specular[] = { 1.0, 1.0, 1.0, 1.0 };
@@ -1857,6 +1821,8 @@ void forbavkground() {
 	glLightfv(GL_LIGHT1, GL_POSITION, light_position);
 	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, L_SpotDirection);
 }
+
+//Enabling light source one
 void enableLighSourceforFirstScene() {
 	enabling();
 	glEnable(GL_LIGHT0);
@@ -1881,58 +1847,80 @@ void enableLighSourceforFirstScene() {
 	GLfloat direction[] = { 0.0, -1.0, 0.0 };
 	//glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, direction);
 }
+
+// enabling light source three for second scene
+void enableLighSourceforSecondScene() {
+	enabling();
+	glEnable(GL_LIGHT2);
+	GLfloat position[] = { 0.0,15.0,-150.0,1.0 };
+	glLightfv(GL_LIGHT2, GL_POSITION, position);
+	GLfloat diffuse[] = { 1.0, 1.0, 0.0, 1.0 }; // white light
+	glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse);
+	GLfloat specular[] = { 1.0, 1.0, 0.0, 1.0 }; // white specular light
+	glLightfv(GL_LIGHT2, GL_SPECULAR, specular);
+
+
+	// Set attenuation parameters
+	GLfloat constantAttenuation = 1.0;
+	GLfloat linearAttenuation = 0.0;
+	GLfloat quadraticAttenuation = 0.00001;
+	glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, constantAttenuation);
+	glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, linearAttenuation);
+	glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, quadraticAttenuation);
+
+
+	// Set the cutoff distance for the light source
+	GLfloat cutoffDistance = 10.0;
+	glLightf(GL_LIGHT2, GL_SPOT_CUTOFF, 90.0);
+	glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, 0.0);
+
+	// Set the direction of the light source
+	GLfloat direction[] = { 0.0, 1.0, 0.0 };
+	//glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, direction);
+}
+
+//Display function
 void display() {
 
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// camera orientation (eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ)
 	if (useCamera1) {
 
 		// Use camera 1
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		//  enableLighSourceforFirstScene();
+	
 		glTranslatef(0.0f, 0.0f, objZ);
 		glPushMatrix();
-		gluLookAt(0 + camX, 130 + camY, 2.5 + camZ, 0+cenX, 0+cenY, 0+cenZ, 0, 1.0, 0);
-		//    gluLookAt(25.0, 25.0 + camY, 0.0, 7.0, -8.0, 0.0, 0.0, 1.0, 0.0);
+		gluLookAt(-14.5 + camX,30 + camY, 13.5 + camZ,- 14+cenX, 30+cenY, 0+cenZ, 0, 1.0, 0);
+	
 		glRotatef(sceY, 0.0, 1.0, 0.0);
 		glTranslatef(0.0, 0.0, sceZ);
-	//	glTranslatef(0.0, sceY, 0);
+		glTranslatef(0.0, sceRY, 0);
 		glTranslatef(sceX, 0, 0);
-
-
-		
 
 		drawFinalScene();
 		glPopMatrix();
 	}
-	else {
-		// Use camera 2
 
+	else{
+		
+		//side veiw
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		//  enableLighSourceforFirstScene();
-		glTranslatef(0.0f, 0.0f, objZ);
+		glTranslatef(45.0f, 0.0f, objZ);
 		glPushMatrix();
-		//   gluLookAt(-12.5 + camX, 5.5 + camY, 2.5 + camZ, 0, 0, 0, 0, 1.0, 0);
-		//   gluLookAt(0.0, 90.0 + camY, -200.0, 0.0, -100.0, 300.0, 0.0, 1.0, 0.0);
-		  //  gluLookAt(-10.0, 5.0 + camY, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-		gluLookAt(0 + camX, 10.0 + camY, +50.0 + camZ, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-		// glTranslatef(0,0,-100);
-
+	
+		gluLookAt(-155 + camX, 82 + camY, 150 + camZ, 0 + cenX, 10 + cenY, 0 + cenZ, 0, 1.0, 0);
+	
 		glRotatef(sceY, 0.0, 1.0, 0.0);
-		//    glTranslatef(0, -30, 90);
 		glTranslatef(0.0, 0.0, sceZ);
-	//	glTranslatef(0.0, sceY, 0);
+		glTranslatef(0.0, sceRY, 0);
 		glTranslatef(sceX, 0, 0);
 
 		drawFinalScene();
 		glPopMatrix();
-		// Extract the translation components
-
-		// Print out the translated coordinates
 
 	}
 
@@ -1947,16 +1935,11 @@ void display() {
 //Animation timer function
 void timer(int x) {
 
-	// skyrotate += 0.1;
 
-	 /*if (xRotated == 360.0)
-		 xRotated = 0.0;
-	 else
-		 xRotated += 2.0;*/
 	travel += 0.5;
 	if (travel == 1) {
 		turn += 0.5;
-		//   travel = 0;
+	
 	}
 
 	if (travel == 3) {
@@ -2045,17 +2028,19 @@ void timer(int x) {
 }
 
 void keyboardSpecial(int key, int x, int y) {
+
+	//camra movemnts along with the z axis
 	if (key == GLUT_KEY_UP)
-		camZ -= 3;
+		camZ -= 5;
 
 	if (key == GLUT_KEY_DOWN)
-		camZ += 3;
+		camZ += 5;
 
 	if (key == GLUT_KEY_RIGHT)
-		sceY += 3;
+		sceY += 5;
 
 	if (key == GLUT_KEY_LEFT)
-		sceY -= 3;
+		sceY -= 5;
 
 
 	if (key == GLUT_KEY_F1)
@@ -2068,34 +2053,49 @@ void keyboardSpecial(int key, int x, int y) {
 }
 
 void keyboard(unsigned char key, int x, int y) {
+	//camra movemnts along with the x axis
 	if (key == 'l')
 		camX += 3;
 
 	if (key == 'r')
 		camX -= 3;
 	if (key == 'f')
-		sceZ += 3;
+		sceZ += 8;
 
 	if (key == 'b')
-		sceZ -= 1;
-	if (key == 'u')
-		camY += 3;
+		sceZ -= 8;
+
+	//camra movemnts along with the y axis
 	if (key == 'd')
-		camY -= 3;
+		sceRY += 5;
+	if (key == 'u')
+		sceRY -= 5;
 
 	if (key == 'x')
-		sceX += 1;
+		sceX += 5;
 	if (key == 'y')
-		sceX -= 1;
-	if (key == '{')
+		sceX -= 5;
+	if (key == 'v')
 		useCamera1 = true;
-	if (key == ':')
-		useCamera1 = false;
+
+	if (key == 'z')
+			useCamera1 = false;
+	  
+	
+
 
 	if (key == '1')
 		enableLighSourceforFirstScene();
+	if (key == '!')
+		glDisable(GL_LIGHT0);
 	if (key == '2')
-		forbavkground();
+		whitelighsource();
+	if (key == '@')
+		glDisable(GL_LIGHT1);
+	if (key == '3')
+		enableLighSourceforSecondScene();
+	if (key == '#')
+		glDisable(GL_LIGHT2);
 	if (key == '6')
 		sceRY += 1;
 	if (key == '7')
@@ -2124,10 +2124,7 @@ void reshape(GLsizei w, GLsizei h) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	//Define the Perspective projection frustum 
-	// (FOV_in_vertical, aspect_ratio, z-distance to the near plane from the camera position, z-distance to far plane from the camera position)
-  //  gluPerspective(150.0, aspect_ratio, 1.0, 100.0);
-	gluPerspective(60, (GLfloat)w / (GLfloat)h, 0.1, 1000.0);
+	gluPerspective(60, (GLfloat)w / (GLfloat)h, 0.1, 10000.0);
 
 
 }
