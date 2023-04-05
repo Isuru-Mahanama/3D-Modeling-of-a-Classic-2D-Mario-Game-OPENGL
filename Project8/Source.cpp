@@ -83,8 +83,7 @@ GLfloat cenY = 0.0;
 GLfloat cenZ = 0.0;
 
 GLfloat sceRY = 0.0;
-GLfloat sceRX = 0.0;
-GLfloat sceRZ = 0.0;
+
 //variables to move the snowman
 GLfloat objX = 0.0;
 GLfloat objY = 0.0;
@@ -1764,9 +1763,6 @@ void drawFinalScene() {
 	
     glTranslatef(0, 0, -700);
 	glScalef(10, 6, 10);
-	//glRotatef(sceRY, 0, 1, 0);
-	glRotatef(sceRX, 1, 0, 0);
-	glRotatef(sceRZ, 0, 0, 1);
 	glTranslatef(-14,-14,-14);
 	secondLargearea();
 	glPopMatrix();
@@ -2036,6 +2032,7 @@ void keyboardSpecial(int key, int x, int y) {
 	if (key == GLUT_KEY_DOWN)
 		camZ += 5;
 
+	//scene goes up and down
 	if (key == GLUT_KEY_RIGHT)
 		sceY += 5;
 
@@ -2059,6 +2056,7 @@ void keyboard(unsigned char key, int x, int y) {
 
 	if (key == 'r')
 		camX -= 3;
+	//scene goes along with z axis
 	if (key == 'f')
 		sceZ += 8;
 
@@ -2070,7 +2068,7 @@ void keyboard(unsigned char key, int x, int y) {
 		sceRY += 5;
 	if (key == 'u')
 		sceRY -= 5;
-
+	//scene moves along with x axis
 	if (key == 'x')
 		sceX += 5;
 	if (key == 'y')
@@ -2098,20 +2096,25 @@ void keyboard(unsigned char key, int x, int y) {
 		glDisable(GL_LIGHT2);
 	if (key == '6')
 		sceRY += 1;
-	if (key == '7')
-		sceRX += 1;
-	if (key == '8')
-		sceRZ += 1;
+	
+	//Changing the place where camra is looking at
+
+	//looking right side
 	if (key == 'g')
 		cenX += 3;
+	//looking up
 	if (key == 'h')
 		cenY += 3;
+	// looking towards z axis
 	if (key == 'j')
 		cenZ += 3;
+	//looking left side
 	if (key == 'G')
 		cenX -= 3;
+	//looking down
 	if (key == 'H')
 		cenY -= 3;
+	// looking towards minse z axis
 	if (key == 'J')
 		cenZ -= 3;
 	glutPostRedisplay();
